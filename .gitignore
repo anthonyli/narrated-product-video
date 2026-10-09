@@ -1,0 +1,25 @@
+# Local media, credentials, and generated artifacts
+work/
+outputs/
+private/
+.env
+.env.*
+!.env.example
+*voice-preferences*.json
+*bailian-voice*.json
+*.pending
+*.pending.json
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+.codegraph/
+.codebase-memory/
+*.mp4
+*.mov
+*.m4a
+*.mp3
+*.wav
+*.zip

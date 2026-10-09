@@ -1,0 +1,4 @@
+interface:
+  display_name: "口播剪辑与动态信息层"
+  short_description: "根据主题和已录制视频完成剪辑，加入字幕、重点卡片与动画，输出成片和封面"
+  default_prompt: "使用 $narrated-product-video 根据我的主题和已录制视频完成剪辑，保留原声，加入口播同步字幕、章节标题和动态信息卡片，交付成片、封面与发布文案。"

@@ -1,0 +1,66 @@
+{
+  "status": "local audit baseline; not a release",
+  "date": "2026-10-09",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "c264d2fe94f378bec04938a9d7b138fa2f8e94a866181df854d837d3aea3474a"
+    },
+    {
+      "path": "agents/openai.yaml",
+      "sha256": "65ffa7bf8d5a04b4e96003fff6e080bbcfb3309f65a65be0e4a19bcf49a18861"
+    },
+    {
+      "path": "references/bailian.md",
+      "sha256": "88a67eab0d35b4ef3f0e7d3121e1d68352cd6aec8150972d1c2644f3d1d2d03f"
+    },
+    {
+      "path": "references/motion.md",
+      "sha256": "dbf09cfe45d4fdc8214086e169b37fc125b9e0ed884606d774a35a0e4162f87a"
+    },
+    {
+      "path": "references/recorded-video.md",
+      "sha256": "79b59b83d35cc45d76a3444d93021e3159590bff96b97e854dbc23db188c4c1e"
+    },
+    {
+      "path": "references/timeline.md",
+      "sha256": "d2af96bf8a814768db7e033e202c9fbeb49462f20439307cfddfed32095f0a54"
+    },
+    {
+      "path": "references/viral-storytelling.md",
+      "sha256": "1b2e30ab563b6b02abc6fc18cb552f4aa45f3ca5edf2c5195c1accf9c61ec2d0"
+    },
+    {
+      "path": "scripts/align_captions.py",
+      "sha256": "b975df4131e049f1b649dda06391e01d2980334968876faf1cf4c815291e0199"
+    },
+    {
+      "path": "scripts/audio_timing.py",
+      "sha256": "01438b0c07b11a70d07984e60b951100050ed5bfe92eba9b7afe475fd764923a"
+    },
+    {
+      "path": "scripts/bailian_voice.py",
+      "sha256": "209bfc55b13c22a060b534123824c9e23a86fd12bf27a30090eb3012794cbb1e"
+    },
+    {
+      "path": "scripts/prepare_recording.py",
+      "sha256": "1233480ae2e04b272277ba39bfa6cd6c3107cc15e1bee6ef82530a88e36742c1"
+    },
+    {
+      "path": "scripts/render_video.py",
+      "sha256": "26e52bea2f3881e75daf5328a4a6d4b197e52fb1d63810f4087c18537ed4701a"
+    },
+    {
+      "path": "assets/remotion/package.json",
+      "sha256": "97041799cf4467f3991d31c1a9cfa7156d0f6ce2866d01b5afa17aee47635e9c"
+    },
+    {
+      "path": "assets/remotion/render.mjs",
+      "sha256": "97cfe98fe15cd3d5a9b38859c87da632565128477919da7ab861f90b6e1fcf3e"
+    },
+    {
+      "path": "assets/remotion/src/index.jsx",
+      "sha256": "ae2fde444df0a650e12a84b6b03f126ef74f86dd9ad35dc6b7bdb962e955eb50"
+    }
+  ]
+}

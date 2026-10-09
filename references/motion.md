@@ -1,0 +1,94 @@
+# Remotion＋FFmpeg 动态信息层
+
+用于「跟着说话，页面有提示」的默认动画流程。时间轴由口播意义与最终声音共同决定。Remotion 负责逐帧动画、视频布局、字幕和信息层；FFmpeg 负责同步粗剪、音频处理、压制及验证。此模板提供基础组件，品牌风格和复杂图表可在任务副本扩展。
+
+## 编辑与动画规则
+
+- 按视觉分类组织画面：人物口播保持人物可见，可按空间安排侧边或上下卡片；全屏实录演示保持操作画面可读；知识解说型 MG 动画执行 [editorial-explainer.md](editorial-explainer.md)，可按观点组织窗口、图表和纸感拼贴。基础模板默认 contain 保护完整画面；如需 cover 或推近，先抽帧检查头、手和关键内容。给信息层留空间，不默认遮挡人物或操作区。
+- 普通内容仅显示当下短字幕，约 10–22 个中文字、最多两行。关键词、卡片不重复整句字幕，同一时刻通常一个主重点，进度条可并存。
+- 新章节使用 big-title，通常 1.5–3 秒；普通卡片通常保留 2–5 秒，复杂截图或代码更长。触发点取对应词时间，入场可提前约 0.1 秒以便读懂；根据语义退出。
+- 强调词在说到时改变颜色或底色。tokens 使用实际词边界；逐字边界若由词区间插值，标明估算并抽查，不能宣称精确。标点和空格仍保留在字幕文本中。
+- 卡片入场约 0.2–0.4 秒，离场约 0.15–0.25 秒，统一缓动。每约 4–7 秒可安排一次 1–3% 推近、轻微位移或信息切换；适合阅读的静止时段应保留。连续推近段的 from/to 要接续，不能突然跳回原缩放。
+- 动画用 useCurrentFrame、interpolate、spring 计算，不能依赖实时计时器、随机值或 CSS animation，否则不同渲染帧可能不一致。
+- 不编造数据、证言和截图。browser 需要真实截图素材，示意图标明“示意”。code 只放能读懂的关键几行，复杂 diagram 使用生成并核实的 SVG／图片或扩展组件。
+- 每种比例独立检查 videoBox、cardBox、字幕与平台按钮安全区；不要只改 aspect 就声称已经验收三种布局。
+
+## 组件约定
+
+| type | 必要内容 | 基础效果 |
+| --- | --- | --- |
+| big-title | text | 大标题弹入，用于章节和观点 |
+| keyword | text | 强调色关键词 |
+| bullet-list | text, items（1–3 项） | 要点错峰出现 |
+| number | text, value, 可选 unit | 大数字卡片，保留原始数值 |
+| quote | text, 可选 attribution | 金句卡片 |
+| comparison | text, left/right 的 title、text | 左右两栏对照 |
+| browser | text, image | 浏览器式截图卡片 |
+| code | text, code（最多 8 行） | 等宽代码卡片 |
+| diagram | text, items（1–3 项） | 简单纵向步骤箭头；复杂图另做 |
+| progress | text | 当前章节内的进度条 |
+
+卡片可带 label、detail、box。图标可以放在已准备的图片中，或在任务副本引入本地图标组件；基础模板不依赖在线图标请求。以上为可运行基础组件，不等于完整的二期品牌组件库。
+
+## 时间轴
+
+这是格式示例，实际所有秒数来自最终声音。路径相对 JSON 文件。已有视频的 video 与 audio 必须来自同次粗剪；video 在模板中静音，audio 只播放一次。仅配音场景可用 image 或无视频的背景，脚本不会自行生成素材或识别口误。
+
+```json
+{
+  "aspect": "16:9",
+  "fps": 30,
+  "duration": 6,
+  "video": "edit-v1/master.mov",
+  "audio": "edit-v1/narration.wav",
+  "accent": "#77efca",
+  "videoFit": "contain",
+  "videoBox": [0.045, 0.14, 0.5, 0.64],
+  "cardBox": [0.59, 0.2, 0.365, 0.52],
+  "captions": [
+    {"start": 0.2, "end": 2.5, "text": "先找到真正的问题。", "tokens": [
+      {"start": 0.2, "end": 1, "text": "先找到"},
+      {"start": 1, "end": 1.7, "text": "真正的"},
+      {"start": 1.7, "end": 2.5, "text": "问题。", "highlight": true}
+    ]},
+    {"start": 3, "end": 5.5, "text": "再分成三个步骤。"}
+  ],
+  "overlays": [
+    {"type": "progress", "start": 0, "end": 6, "text": "01 / 问题"},
+    {"type": "big-title", "start": 0.2, "end": 2.6, "text": "问题", "detail": "先明确要解决什么"},
+    {"type": "bullet-list", "start": 3, "end": 6, "text": "怎么解决", "items": ["定位", "验证", "行动"]}
+  ],
+  "motions": [
+    {"start": 0, "end": 3, "from": 1, "to": 1.02},
+    {"start": 3, "end": 6, "from": 1.02, "to": 1}
+  ]
+}
+```
+
+`duration` 为实际最终音频时长，渲染向上取整到帧；差值应小于一帧。每个字幕和信息层的 start/end 都必须在此范围内。box 是画布中的 `[x, y, width, height]`，各值为 0–1。人物在右时调换 videoBox/cardBox。`fontFile` 可指定有使用权限的本地字体以保持跨机器一致；不指定则检查本机中文字体是否可用。
+
+`tokens` 可省略，省略时显示普通字幕；提供时拼接文本必须与字幕完全一致，含标点。用 align_captions.py 的结果时 captions 可直接复用，characters 不能冒充真实逐字标注。渲染器只读取制作好的时间轴，不会从主题自动推断词时间。
+
+## 运行
+
+`SKILL_DIR` 是当前技能目录，由执行环境发现；安装到任务副本。各 Remotion 包固定同版本，升级后重新实渲验证。
+
+```sh
+mkdir -p work/task
+cp -R "$SKILL_DIR/assets/remotion" work/task/remotion
+npm ci --prefix work/task/remotion --no-fund --no-audit
+node work/task/remotion/render.mjs work/task/motion.json outputs/video-v1.mp4 --validate-only
+node work/task/remotion/render.mjs work/task/motion.json outputs/video-v1.mp4
+```
+
+渲染器验证时间、素材存在性及基础内容，输出 MP4 与同名 SRT，拒绝覆盖；素材复制到临时目录供离屏渲染，结束后清理。首次运行可能下载 Remotion 所需的浏览器内核；这用于离屏渲染。已有兼容可执行文件可通过 REMOTION_BROWSER_EXECUTABLE 指定，不写死个人路径。模板随附 package-lock.json，使用 npm ci 安装锁定依赖；任务副本中的锁文件应随工程保留。
+
+## 验收
+
+- FFmpeg 完整解码 MP4；检查尺寸、帧率、H.264/yuv420p、AAC、48 kHz，视频与最终 WAV 时差不超过一帧或已解释的编码延迟。
+- 检视每种卡片入场中间帧和稳定帧，以及字幕较长处、所有剪辑接点、首尾。确认中文正常、没有遮挡人物、截字或卡片互盖，尤其 3:4。
+- 复查语音触发点与高亮词，开头／中段／结尾及每处接点检查音画同步。长视频不能只验前三秒。
+- 自动检查和听感判断分别记录。没有真实原片时只报告合成素材验证，不能声称完成真人口型同步验收。
+- 视频之外仍完成三种独立排版海报、发布标题、描述与话题。动画模板或其演示不代替这些交付。
+
+API 依据：[Remotion 渲染接口](https://www.remotion.dev/docs/renderer/render-media)、[动画属性](https://www.remotion.dev/docs/animating-properties)、[视频层](https://www.remotion.dev/docs/offthreadvideo)。
