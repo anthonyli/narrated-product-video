@@ -2,6 +2,7 @@
 work/
 outputs/
 private/
+archive/
 .env
 .env.*
 !.env.example
@@ -17,6 +18,8 @@ __pycache__/
 .DS_Store
 .codegraph/
 .codebase-memory/
+.remotion/
+.workbuddy/
 *.mp4
 *.mov
 *.m4a

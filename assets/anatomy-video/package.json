@@ -1,0 +1,6 @@
+{
+  "name": "narrated-anatomy-video",
+  "private": true,
+  "type": "module",
+  "dependencies": { "@resvg/resvg-js": "2.6.2" }
+}

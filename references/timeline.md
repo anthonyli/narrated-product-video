@@ -6,7 +6,7 @@
   "aspect": "16:9",
   "fps": 24,
   "audio": "narration.wav",
-  "font": "/path/to/installed-cjk-font.ttf",
+  "font": "../private/fonts/cjk.ttf",
   "font_size": 36,
   "shots": [
     {"start": 0, "end": 2.3, "image": "shot-01.png"},
@@ -18,6 +18,8 @@
   ]
 }
 ```
+该示例按 `work/timeline.json` 组织文件，字体须由用户提供有使用权限的文件，放在项目的 `private/fonts/cjk.ttf`；示例路径不代表仓库已附带字体。若 JSON 放在 `work/<task>/`，相应路径改为 `../../private/fonts/cjk.ttf`。
+
 每个镜头首尾相接，最后一个结束于音轨实际末尾。图像可淡化，音频不能按镜头切开。字幕来自 align_captions.py 的 captions；characters 可定位镜头对应词。
 
 ```sh

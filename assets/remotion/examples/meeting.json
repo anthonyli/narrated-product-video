@@ -1,0 +1,60 @@
+{
+  "aspect": "16:9",
+  "fps": 30,
+  "duration": 34,
+  "audio": "preview-silence.wav",
+  "captions": [],
+  "overlays": [],
+  "scenes": [
+    {
+      "id": "meeting-question", "start": 0, "end": 6, "kind": "hero",
+      "eyebrow": "工作方法 / 会议之后", "title": "讨论结束，行动才开始",
+      "lead": "一份纪要，先找齐", "focus": "3 个答案",
+      "summary": "要做什么 · 谁来负责 · 何时完成",
+      "bg": "#f8e6ee", "accent": "#c43c78",
+      "sourceLabel": "无声视觉样片 · 虚构工作流示意",
+      "items": [
+        {"label": "任务", "detail": "一个可交付的结果", "at": 0.6},
+        {"label": "负责人", "detail": "一个明确的联系人", "at": 1.6},
+        {"label": "时间", "detail": "一个可确认的节点", "at": 2.6}
+      ]
+    },
+    {
+      "id": "meeting-comparison", "start": 6, "end": 14, "kind": "compare",
+      "eyebrow": "01 / 从讨论到承诺", "title": "记录了讨论，还要写清行动",
+      "summary": "把模糊表达，改成可以确认的任务。",
+      "bg": "#e2eff8", "accent": "#256ebc", "revealAt": 2.2,
+      "sourceLabel": "无声视觉样片 · 虚构工作流示意",
+      "before": {"label": "讨论记录", "title": "说了很多，下一步仍然模糊", "items": ["资料需要再整理", "大家跟进一下", "尽快给出结果"]},
+      "after": {"label": "行动清单", "title": "每一项都能找到负责人", "items": ["整理资料 → 林悦", "核对清单 → 周宁", "周五 17:00 → 提交版本"]}
+    },
+    {
+      "id": "meeting-state", "start": 14, "end": 25, "kind": "demo",
+      "eyebrow": "02 / 把一条任务补完整", "title": "任务从一句话，变成一个约定",
+      "summary": "这里展示的是字段变化，并非真实产品录像。",
+      "bg": "#e5f3e9", "accent": "#227c60",
+      "sourceLabel": "无声视觉样片 · 虚构界面示意",
+      "states": [
+        {"at": 0, "label": "提取任务", "title": "行动项 / 01", "fields": [{"label": "任务", "value": "整理客户资料", "changed": true}, {"label": "负责人", "value": "待确认"}, {"label": "完成时间", "value": "待确认"}]},
+        {"at": 3, "label": "明确负责人", "title": "行动项 / 01", "fields": [{"label": "任务", "value": "整理客户资料"}, {"label": "负责人", "value": "林悦", "changed": true}, {"label": "完成时间", "value": "待确认"}], "pointer": {"x": 0.73, "y": 0.51, "label": "确认负责人"}},
+        {"at": 6.5, "label": "约定交付时间", "title": "行动项 / 01", "fields": [{"label": "任务", "value": "整理客户资料"}, {"label": "负责人", "value": "林悦"}, {"label": "完成时间", "value": "周五 17:00", "changed": true}], "pointer": {"x": 0.73, "y": 0.75, "label": "确认时间"}}
+      ]
+    },
+    {
+      "id": "meeting-loop", "start": 25, "end": 34, "kind": "flow",
+      "eyebrow": "03 / 让任务继续往前走", "title": "发出清单之后，还要跟进结果",
+      "summary": "从记录到确认，再到交付，任务才有完整去向。",
+      "bg": "#fff1d3", "accent": "#aa6818",
+      "sourceLabel": "无声视觉样片 · 虚构工作流示意",
+      "nodes": [
+        {"id": "record", "label": "形成清单", "detail": "任务 / 人 / 时间", "at": 0.3},
+        {"id": "confirm", "label": "本人确认", "detail": "澄清范围和节点", "at": 2},
+        {"id": "deliver", "label": "提交结果", "detail": "附上交付物", "at": 4.2}
+      ],
+      "edges": [
+        {"from": "record", "to": "confirm", "label": "发送", "at": 1.2},
+        {"from": "confirm", "to": "deliver", "label": "执行", "at": 3.4}
+      ]
+    }
+  ]
+}

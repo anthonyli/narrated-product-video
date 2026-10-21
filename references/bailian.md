@@ -2,9 +2,11 @@
 
 端点默认 https://dashscope.aliyuncs.com/api/v1；密钥、模型、声音必须属于匹配区域。凭据读取环境变量 DASHSCOPE_API_KEY，模型变化时核对官方文档。
 
+以下命令从当前项目根目录执行。声音偏好在 `private/voice/voice-preferences.json`，其中素材路径相对该文件所在目录；已有兼容声音响应保存在 `private/voice/bailian-voice.json`。先检查项目内响应及声音与模型的匹配关系，不依赖个人主目录或旧项目的位置。兼容声音可从响应的 `output.voice` 或缓存包装的 `response.output.voice` 读取并注入子进程，不打印到共享日志。`private/` 应被 Git 忽略。
+
 已授权且没有兼容声音时注册：
 ```sh
-python scripts/bailian_voice.py enroll --reference work/reference.wav --output work/voice-private.json
+python scripts/bailian_voice.py enroll --reference private/voice/own-voice-reference.wav --output private/voice/bailian-voice.json
 ```
 使用清晰、无伴奏、无重叠说话的样本。默认目标模型 qwen3-tts-vc-2026-01-22；声音注册与合成模型必须匹配。不要把样本打包到技能。
 

@@ -1,0 +1,53 @@
+{
+  "aspect": "16:9", "fps": 30, "duration": 32,
+  "audio": "preview-silence.wav", "captions": [], "overlays": [],
+  "scenes": [
+    {
+      "id": "fraction-concept", "start": 0, "end": 6, "kind": "hero",
+      "eyebrow": "数学小课堂 / 认识分数", "title": "一个分数，说明两件事",
+      "lead": "把同一个整体等分，再取出其中几份", "focus": "3 / 4",
+      "summary": "下面的 4 表示等分数，上面的 3 表示取出的份数。",
+      "bg": "#eee7f8", "accent": "#7950b6",
+      "sourceLabel": "无声视觉样片 · 数学示意",
+      "items": [{"label": "分母 4", "detail": "整体等分成 4 份", "at": 1}, {"label": "分子 3", "detail": "取出其中的 3 份", "at": 2.5}]
+    },
+    {
+      "id": "fraction-amount", "start": 6, "end": 15, "kind": "bars",
+      "eyebrow": "01 / 先统一整体", "title": "用同样长的整体，比较取了多少",
+      "summary": "彩色部分越长，表示的分数越大。",
+      "bg": "#e3f0f8", "accent": "#277caf",
+      "sourceLabel": "无声视觉样片 · 按分数数值绘制",
+      "unit": "个整体", "maxValue": 1, "note": "每条浅色底轨都表示 1 个完整的整体",
+      "items": [
+        {"label": "二分之一", "value": 0.5, "displayValue": "1 / 2", "at": 0.6},
+        {"label": "三分之二", "value": 0.6666666666666666, "displayValue": "2 / 3", "at": 2},
+        {"label": "四分之三", "value": 0.75, "displayValue": "3 / 4", "at": 3.4}
+      ]
+    },
+    {
+      "id": "fraction-equivalent", "start": 15, "end": 23, "kind": "bars",
+      "eyebrow": "02 / 数字不同，大小也可能一样", "title": "二分之一，等于四分之二",
+      "summary": "等分得更细，取出的总量仍然相同。",
+      "bg": "#e6f3e7", "accent": "#287b58",
+      "sourceLabel": "无声视觉样片 · 1/2 = 2/4 = 0.5",
+      "unit": "个整体", "maxValue": 1, "note": "两条色带终点重合，都占整体的一半",
+      "items": [
+        {"label": "分成 2 份，取 1 份", "value": 0.5, "displayValue": "1 / 2", "at": 0.5},
+        {"label": "分成 4 份，取 2 份", "value": 0.5, "displayValue": "2 / 4", "at": 2.3}
+      ]
+    },
+    {
+      "id": "fraction-reasoning", "start": 23, "end": 32, "kind": "flow",
+      "eyebrow": "03 / 分母相同的时候", "title": "每份一样大，直接比较取了几份",
+      "summary": "同一个整体中，取 3 份比取 2 份多，所以 3/4 大于 2/4。",
+      "bg": "#fff0d7", "accent": "#a65c1d",
+      "sourceLabel": "无声视觉样片 · 同分母分数比较",
+      "nodes": [
+        {"id": "whole", "label": "同一个整体", "detail": "都等分成 4 份", "at": 0.4},
+        {"id": "parts", "label": "每一份相等", "detail": "3 份比 2 份多", "at": 2.2},
+        {"id": "result", "label": "3/4 > 2/4", "detail": "分母相同，比较分子", "at": 4.5}
+      ],
+      "edges": [{"from": "whole", "to": "parts", "label": "等分", "at": 1.3}, {"from": "parts", "to": "result", "label": "比较", "at": 3.5}]
+    }
+  ]
+}
