@@ -1,5 +1,7 @@
 # 百炼口播与词时间戳
 
+这是可选的云端流程。默认先使用[本地配音](local-tts.md)；只有用户明确选择或已有适用于当前任务的云端授权时才调用。声音注册会上传参考录音，合成会发送口播文本，云端识别也会处理音频；本地失败或缺少字幕时间戳不构成自动切换依据。仅走本地流程无需配置 `DASHSCOPE_API_KEY`。
+
 端点默认 https://dashscope.aliyuncs.com/api/v1；密钥、模型、声音必须属于匹配区域。凭据读取环境变量 DASHSCOPE_API_KEY，模型变化时核对官方文档。
 
 以下命令从当前项目根目录执行。声音偏好在 `private/voice/voice-preferences.json`，其中素材路径相对该文件所在目录；已有兼容声音响应保存在 `private/voice/bailian-voice.json`。先检查项目内响应及声音与模型的匹配关系，不依赖个人主目录或旧项目的位置。兼容声音可从响应的 `output.voice` 或缓存包装的 `response.output.voice` 读取并注入子进程，不打印到共享日志。`private/` 应被 Git 忽略。

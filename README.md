@@ -2,14 +2,14 @@
 
 把录制视频或主题素材制作成带配音、字幕和动态信息层的视频，并整理封面及发布文案。
 
-当前状态：**本地审查基线，尚未发布**。仓库保留了现有技能的 15 个源文件，以便逐项核对改动；已知问题见 [审查记录](docs/review-2026-10-09.md)。这里仍包含原作者的系列视觉偏好，尚未完成通用化。
+项目地址：[anthonyli/narrated-product-video](https://github.com/anthonyli/narrated-product-video)。这是面向 Agent 的视频制作技能，默认优先使用本地模型生成配音，百炼作为可选云端后端。已知问题见历史[审查记录](docs/review-2026-10-09.md)；这里仍包含原作者的系列视觉偏好，使用者可按自己的品牌要求覆盖。
 
 2026-10-09：Remotion 及配套包已从 4.0.529 升级至 4.0.534，增加依赖锁文件，并通过包含视频、独立音轨、中文字幕与动画的 4 秒合成素材实渲和完整解码检查。迁入清单保留升级前的哈希，作为历史基线。
 
 ## 已有能力
 
 - 保留原声：根据 EDL 同步剪辑画面与声音，输出剪辑映射。
-- 生成配音：提供百炼适配脚本、连续音轨处理和字幕对齐。
+- 生成配音：优先本地 Qwen3-TTS + MLX，提供安装与合成说明；另保留可选百炼适配脚本、连续音轨处理和字幕对齐。
 - 动态信息层：提供 Remotion 标题、关键词、卡片及字幕模板。
 - 简单截图视频：提供 FFmpeg/Pillow 渲染路径。
 - 视觉分类：全屏实录演示、鲜明宣传，以及[知识解说型 MG 动画](references/editorial-explainer.md)（浅色信息图／纸感拼贴）。解说路径先做论点、证据和可见状态分镜，再映射到实际画面。
@@ -27,11 +27,28 @@
 - `agents/openai.yaml`：技能入口元数据。
 - `docs/baseline-manifest.json`：本次迁入源文件的 SHA-256 清单。
 
+## 安装与本地配音
+
+克隆本仓库，将仓库目录作为技能目录交给支持 `SKILL.md` 的 Agent。需要安装到 Codex 时，可将 `SKILL.md`、`agents/`、`references/`、`scripts/` 和 `assets/` 一起复制到自己的技能目录 `narrated-product-video/`；不要只复制入口文件，也不要覆盖已有安装中的个人修改。
+
+```sh
+git clone https://github.com/anthonyli/narrated-product-video.git
+cd narrated-product-video
+```
+
+生成口播前，请按[本地配音安装说明](references/local-tts.md)准备环境：
+
+- 参考方案：Apple Silicon Mac、Python 3.10+、`mlx-audio` 与 `Qwen3-TTS-12Hz-1.7B-Base-4bit`。
+- 首次安装需要联网下载依赖和模型；模型与依赖准备完成后可使用本地路径离线推理，不需要百炼账号或 API Key。
+- 每位使用者自行提供本人或获授权的声音样本及准确转写；仓库不包含作者音色、模型权重、声音 ID 或密钥。
+- Windows／Linux／Intel Mac 不直接照搬 MLX 命令；参考文档提供 Qwen3-TTS 上游入口。环境不满足时不自动切换云端。
+- 本地语音合成与字幕识别是两个步骤，当前没有一键完成所有本地后端安装及字幕适配的脚本。
+
 ## 运行条件
 
 Python 3、FFmpeg、可用的中文字体；截图渲染需要 Pillow，FFmpeg 也可由 imageio-ffmpeg 提供。动画路径需要 Node.js、npm 和模板 package.json 中固定版本的依赖。首次渲染可能需要下载渲染内核。依赖安装在任务副本中。
 
-详细命令分别位于 [录屏流程](references/recorded-video.md)、[动画流程](references/motion.md)、[百炼流程](references/bailian.md) 和 [截图流程](references/timeline.md)。当前尚无覆盖所有后端的安装自检，也未在干净机器上验证首次运行。
+详细命令分别位于 [本地配音（默认）](references/local-tts.md)、[录屏流程](references/recorded-video.md)、[动画流程](references/motion.md)、[百炼流程（可选）](references/bailian.md) 和 [截图流程](references/timeline.md)。当前尚无覆盖所有后端的安装自检，也未在干净机器上验证首次运行。
 
 ## 私有数据与产物
 
@@ -53,4 +70,4 @@ Python 3、FFmpeg、可用的中文字体；截图渲染需要 Pillow，FFmpeg �
 
 本项目自己的许可证尚未选定。依赖不随项目代码自动变更许可；使用 Remotion 前查看其 [许可说明](https://www.remotion.dev/docs/license/faq)。素材、字体和声音参考也需具备相应使用权限。
 
-当前仅初始化了本地 Git 仓库，没有提交、配置远程、创建 GitHub 仓库或推送。当前已知问题和定位讨论完成后再形成首个发布版本。
+当前按技能源码维护，尚未声明稳定发行版；首次运行、完整制作与人工听感验收应分别核实。
