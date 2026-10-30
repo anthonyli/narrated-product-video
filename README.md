@@ -1,6 +1,6 @@
 # narrated-product-video
 
-把录制视频或主题素材制作成带配音、字幕和动态信息层的视频，并整理封面及发布文案。
+把录制视频或主题素材制作成配音视频、动态信息层或共享元素连续动画，并整理独立口播稿、封面及发布文案。
 
 项目地址：[anthonyli/narrated-product-video](https://github.com/anthonyli/narrated-product-video)。这是面向 Agent 的视频制作技能，默认优先使用本地模型生成配音，百炼作为可选云端后端。已知问题见历史[审查记录](docs/review-2026-10-09.md)；这里仍包含原作者的系列视觉偏好，使用者可按自己的品牌要求覆盖。
 
@@ -10,7 +10,8 @@
 
 - 保留原声：根据 EDL 同步剪辑画面与声音，输出剪辑映射。
 - 生成配音：优先本地 Qwen3-TTS + MLX，提供安装与合成说明；另保留可选百炼适配脚本、连续音轨处理和字幕对齐。
-- 动态信息层：提供 Remotion 标题、关键词、卡片及字幕模板。
+- 动态信息层：提供 Remotion 标题、关键词、卡片及字幕模板，保留原录屏制作路线。
+- 共享元素连续动画：[制作与节奏规范](references/shared-motion.md)覆盖连续 UI 重排、聚焦、迁移和遮罩，沿用已认可的源码及风格。默认横版 1080p、独立口播稿、不烧录口播字幕；慢节奏通过动作时序与衔接修复，不用全片倍速。
 - 简单截图视频：提供 FFmpeg/Pillow 渲染路径。
 - 视觉分类：全屏实录演示、鲜明宣传，以及[知识解说型 MG 动画](references/editorial-explainer.md)（浅色信息图／纸感拼贴）。解说路径先做论点、证据和可见状态分镜，再映射到实际画面。
 - 横版解说场景：新增 `hero`、`compare`、`flow`、`bars`、`demo`，包含比例图、连线、真实图片或示意字段的多状态演示。新 `scenes` 接口当前仅支持 16:9，原 `overlays` 接口保留。
@@ -48,7 +49,7 @@ cd narrated-product-video
 
 Python 3、FFmpeg、可用的中文字体；截图渲染需要 Pillow，FFmpeg 也可由 imageio-ffmpeg 提供。动画路径需要 Node.js、npm 和模板 package.json 中固定版本的依赖。首次渲染可能需要下载渲染内核。依赖安装在任务副本中。
 
-详细命令分别位于 [本地配音（默认）](references/local-tts.md)、[录屏流程](references/recorded-video.md)、[动画流程](references/motion.md)、[百炼流程（可选）](references/bailian.md) 和 [截图流程](references/timeline.md)。当前尚无覆盖所有后端的安装自检，也未在干净机器上验证首次运行。
+详细命令分别位于 [本地配音（默认）](references/local-tts.md)、[录屏流程](references/recorded-video.md)、[动画路线选择](references/motion.md)、[共享元素动画](references/shared-motion.md)、[百炼流程（可选）](references/bailian.md) 和 [截图流程](references/timeline.md)。当前尚无覆盖所有后端的安装自检，也未在干净机器上验证首次运行。
 
 ## 私有数据与产物
 

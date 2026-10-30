@@ -1,50 +1,25 @@
-# GSAP 动效路径（借助「五鼎动画工厂」技能）
+# 可选 GSAP 动效路径
 
-当用户要求「像 demo 那样的动感」「MG 动画」「弹性动效」「知识动画」，且画面以**动画表达为主、不依赖真实产品截图**时，用这条路径。它与 `scenes` 编辑排版路径的分工：
+当任务需要复杂形状遮罩、共享元素或自定义时间轴，且当前项目已有适用的 GSAP 渲染工程或用户已安装相应工具时，可以复用。它是渲染实现选择，不因“MG 动画”“动感”关键词自动切换工具，也不要求安装另一技能。用户认可的共享元素风格先读 [shared-motion.md](shared-motion.md)，不要因换工具重做已认可的视觉。
 
-| | editorial scenes（本技能 Remotion） | GSAP 动效（五鼎动画工厂） |
-|---|---|---|
-| 强项 | 真实截图进浏览器窗框、来源标注、证据排版 | elastic/back 弹入、逐字上滑、打字机、图标描边——手 K 级 MG 动感 |
-| 适用 | 产品宣传、教程解说（有截图素材） | 概念讲解、要点罗列、金句片（无截图也能饱满） |
-| 字幕/配音 | 内置字幕条 + bailian 声音 | 用它的 TTS 工作流（edge-tts），或本技能出声音后 ffmpeg 混音 |
+| 路线 | 适合内容 | 实现边界 |
+| --- | --- | --- |
+| Remotion `overlays` | 录屏、原声视频上的提示和字幕 | 保持真实操作可读，音画同步剪辑 |
+| Remotion `scenes` | 概念、比较、流程、比例图和多状态说明 | 现有接口限 16:9，允许真实素材或明确标识的示意 |
+| 共享元素动画 | 同一 UI 或主体连续重排、扫描聚焦、迁移与遮罩 | 按认可源码和对应路线文档制作，不强套固定栏位 |
+| 项目已有 GSAP 工程 | 需要自定义时间轴且现有渲染器能够准确导出的动画 | 先核实可复现的逐帧接口与本地运行条件 |
 
-两者可组合：GSAP 出动画主体，本技能负责口播稿、字幕校对与最终混音验收。
+## 复用现有工程
 
-## 本机（macOS）已验证的调用方式
+1. 读取当前工程的说明、入口脚本与依赖锁文件，确认导出命令、画布、帧率、总时长及逐帧定位接口。历史机器的浏览器、Node、Python 和 FFmpeg 绝对路径不可复制到新项目。
+2. 从当前环境发现运行时与浏览器位置，用工程实际支持的配置传入。依赖放在任务副本；需要新增安装或下载时按当前任务的授权范围处理，不修改市场安装的技能或安全配置来掩盖运行错误。
+3. 检查是否带作者品牌角标、固定字幕、文案替换、音色或云端 TTS 行为。在任务副本中显式关闭或替换与任务不符的默认值，保留完整原稿，不能让第三方脚本悄悄改写口播。
+4. 先渲代表性的连续片段与转场边界，验证时间轴可按帧确定性定位，不能依赖实时播放或计时器录制。再渲完整视频，并按主技能完成解码、运动和音画验收。
 
-技能装在 `~/.workbuddy/skills/wuding-kinetic-video/`（下称 `$SK`）。作者按 Windows 写死了路径，Mac 上按以下参数覆盖（2026-10-11 全链路冒烟验证通过，样例在 `work/gsap-smoke/`）：
+没有可用的 GSAP 工程时，继续使用本技能已支持的路线，或明确报告所缺的实现；不能把第三方工具名字当成已安装、已运行的能力。
 
-```bash
-SK=~/.workbuddy/skills/wuding-kinetic-video
-CHROME="/Users/anthonyli/Library/Caches/ms-playwright/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
-FF=<项目内或 imageio-ffmpeg 的 ffmpeg 路径>   # 不能用 Playwright 自带 ffmpeg（缺 H.264）
+## 配音与节奏
 
-# 1. 读稿拆幕写 scenes.json（schema 见 $SK/references/scenes_schema.md）
-# 2. 构建 HTML
-NODE_OPTIONS= /usr/local/bin/node $SK/scripts/build_html.mjs scenes.json out.html
-# 3. 抽帧验证（先看帧再全量）
-NODE_OPTIONS= /usr/local/bin/node $SK/scripts/render.mjs out.html _preview --chrome="$CHROME" --only=0,90,180,270
-# 4. 全量渲染（长片用 --start/--end 分段）
-NODE_OPTIONS= /usr/local/bin/node $SK/scripts/render.mjs out.html _frames --chrome="$CHROME"
-# 5. 编码
-NODE_OPTIONS= /usr/local/bin/node $SK/scripts/encode.mjs _frames final.mp4 --ffmpeg=$FF
-# 6.（可选）TTS 配音
-/Users/anthonyli/.workbuddy/binaries/python/envs/default/bin/python $SK/scripts/tts_scenes.py script.json scenes.json vo --ffmpeg=$FF
-```
+口播由本技能管理，默认沿用 [local-tts.md](local-tts.md) 的本地 Qwen3-TTS + MLX 流程及当前制作项目 `private/voice/` 中的授权声音。旧工程的百炼、edge-tts 或系统声音配置不构成本次切换音色或上传录音的授权。渲染器只接入已完成的连续音轨；视觉样片可保持无声，交付时明确说明。
 
-注意事项：
-
-- **一律加 `NODE_OPTIONS=`**（清空沙箱 fs shim，否则报假 EEXIST，与 Remotion 同一坑）。
-- playwright-core 装在 `~/.workbuddy/binaries/node/workspace/node_modules`，render.mjs 会自动解析到；缺失时 `npm install playwright-core` 到该目录。
-- 渲染是 seek 确定性的（`window.__KINETIC__.seek(t)`），机器慢不掉帧；帧目录 `_frames`/`_preview` 约 200MB，交付后可删。
-- **不要改动 `$SK` 内的文件**——它是市场安装的技能，更新会被覆盖；Mac 适配全部通过命令行参数完成。
-
-## 该技能的三个自带行为（用前知晓）
-
-1. **文案替换**：`tts_scenes.py` 会把稿中「中老年人/银发族」等词替换成作者的口癖（"爱折腾的哥哥姐姐"）；给本用户做视频时 unwanted，用本技能的 bailian 声音替代其 TTS，或检查替换逻辑。
-2. **默认角标**是「你的品牌 × 老歌哥」，`badge` 字段必须改成用户自己的品牌或留空。
-3. 默认皮肤 `tech`（深墨+薄荷绿）；要贴合 PageOn 纸白品牌风时改 `skin` 或在 `free` 幕自定义。
-
-## 质量基线（沿用本技能标准）
-
-分镜节奏参照 editorial-explainer 的量化基线（旁白 410–440 字/分、章节 20–40s、每幕 4–8s）；bars 数值必须真实或标注估算；交付前抽帧确认无文字溢出（`check_overflow.mjs`）。
+缩短慢转场和无意义停顿，衔接相邻动作，稳定阅读由内容与声音决定。语速、每幕时长和弹性幅度不照搬历史样片的固定数字，不用全片倍速处理流畅度。动画、事实标识、无烧录字幕默认值与验收标准以当前选定路线为准。

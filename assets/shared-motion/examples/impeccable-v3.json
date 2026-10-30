@@ -1,0 +1,154 @@
+{
+  "adapter": "../editorial_ui.py",
+  "canvas": [
+    1920,
+    1080
+  ],
+  "fps": 60,
+  "source_date": "2026-10-30",
+  "sources": [
+    "https://github.com/pbakaus/impeccable"
+  ],
+  "fact_scope": "Reference example only; reverify numbers, commands and license before a new publication. Not execution footage.",
+  "content": {
+    "brand": "impeccable",
+    "disclaimer": "概念演绎 / 非实测演示",
+    "ui": {
+      "title": [
+        "Make room",
+        "for better ideas."
+      ],
+      "body": [
+        "A small studio for big ideas.",
+        "Thoughtful design. Clear purpose."
+      ],
+      "cta": "Explore →",
+      "brand": "STUDIO / 01",
+      "navigation": "Work     About     Contact",
+      "note": [
+        "Less noise.",
+        "More intention."
+      ]
+    },
+    "reflow_tag": "critique → polish",
+    "command_title": "DESIGN, WITH INTENT",
+    "command_names": [
+      "critique",
+      "polish",
+      "bolder",
+      "audit"
+    ],
+    "command_details": [
+      "看清问题",
+      "打磨细节",
+      "增强表达",
+      "审查界面"
+    ],
+    "context_title": "从上下文开始。",
+    "documents": [
+      {
+        "title": "PRODUCT.md",
+        "items": [
+          [
+            "AUDIENCE",
+            "Who is it for?"
+          ],
+          [
+            "PURPOSE",
+            "What matters?"
+          ],
+          [
+            "CONSTRAINTS",
+            "What stays true?"
+          ]
+        ],
+        "color": "#E6E8DF"
+      },
+      {
+        "title": "DESIGN.md",
+        "items": [
+          [
+            "TYPE",
+            "Clear hierarchy"
+          ],
+          [
+            "COLOR",
+            "Meaningful roles"
+          ],
+          [
+            "SPACING",
+            "Room to breathe"
+          ]
+        ],
+        "color": "#F3DAB8"
+      }
+    ],
+    "code_label": "SOURCE",
+    "code_lines": [
+      "const layout = {",
+      "  hierarchy: \"clear\",",
+      "  spacing: \"intentional\",",
+      "  color: \"purposeful\"",
+      "};"
+    ],
+    "detector_title": "确定性规则，不靠猜。",
+    "rule_count": 62,
+    "rule_label": "62 RULES",
+    "detector_detail": "无需 LLM / API key",
+    "detector_limit": "模式检查 ≠ 完整视觉验证",
+    "inspection_title": "还要看，真实渲染后的页面。",
+    "inspection_labels": [
+      "文字层级",
+      "对比与可读性",
+      "间距与比例"
+    ],
+    "boundary_title": "LOCAL CHECKOUT",
+    "boundary_tag": "live",
+    "boundaries": [
+      "不注入生产环境",
+      "不削弱 CSP",
+      "审查 hooks"
+    ],
+    "outro_title": "设计指令，落在具体界面。",
+    "outro_detail": "适合已有界面的迭代与审查",
+    "license": "Apache 2.0",
+    "source_label": "github.com/pbakaus/impeccable"
+  },
+  "scenes": [
+    {
+      "id": "ui_reflow",
+      "source": "ui_reflow",
+      "holds": []
+    },
+    {
+      "id": "commands",
+      "source": "commands",
+      "holds": []
+    },
+    {
+      "id": "context",
+      "source": "context",
+      "holds": []
+    },
+    {
+      "id": "detector",
+      "source": "detector",
+      "holds": []
+    },
+    {
+      "id": "inspection",
+      "source": "inspection",
+      "holds": []
+    },
+    {
+      "id": "local_boundary",
+      "source": "local_boundary",
+      "holds": []
+    },
+    {
+      "id": "outro",
+      "source": "outro",
+      "holds": []
+    }
+  ]
+}

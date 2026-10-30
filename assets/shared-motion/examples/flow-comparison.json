@@ -1,0 +1,16 @@
+{
+  "adapter": "flow_comparison.py",
+  "canvas": [1920, 1080],
+  "fps": 60,
+  "content": {
+    "eyebrow": "ROUTE COMPARISON",
+    "title": "连接结构变了，对象还是同一组。",
+    "initial_label": "同一路线，共享通道",
+    "final_label": "分开路线，独立连接",
+    "source": "起点",
+    "destination": "终点",
+    "objects": ["A", "B", "C"],
+    "explanation": "观察 A、B、C 如何沿连续的路径分开；这里只解释连接关系。",
+    "disclaimer": "原理示意 / 非性能实测"
+  }
+}

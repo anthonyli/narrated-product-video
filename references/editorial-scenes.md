@@ -2,7 +2,7 @@
 
 用于 [知识解说型 MG 动画](editorial-explainer.md)。先按 [分镜契约](editorial-storyboard.md) 确定每段解释任务，再映射到这里的实现；不要为了使用现成组件而扭曲内容。五种场景是起点，复杂地图、物理过程、任意物体运动等仍需扩展组件并实渲检查。
 
-实现位于 `assets/remotion/src/editorial.jsx`，验证位于 `assets/remotion/editorial-contract.mjs`。当前 `scenes` 仅支持 1920×1080 的 **16:9**；其他比例继续使用原 `overlays` 或另做布局，不能仅改 aspect 后宣称完成。模板内置参考片的微动效——入场回弹缩放、场景体缓慢推近（约 2%）、卡片 ±2–3px 慢速微漂浮，顶栏／页码／进度／字幕固定——制作时不要再叠加额外晃动，动感基线的量测依据见 [editorial-explainer.md](editorial-explainer.md)。
+实现位于 `assets/remotion/src/editorial.jsx`，验证位于 `assets/remotion/editorial-contract.mjs`。当前 `scenes` 仅支持 1920×1080 的 **16:9**；其他比例继续使用原 `overlays` 或另做布局，不能仅改 aspect 后宣称完成。该模板当前实现包括入场回弹缩放、场景体缓慢推近（约 2%）、卡片 ±2–3px 慢速微漂浮，以及固定顶栏／页码／进度／字幕。使用时不要再叠加晃动。这些是本接口的模板默认值，不是其他路线的强制设计；共享主体连续变化与无烧录字幕的路线见 [shared-motion.md](shared-motion.md)。
 
 ## 外层时间轴
 
@@ -22,7 +22,7 @@
 
 可选：`eyebrow`（章节短标签）、`summary`（短解释）、`bg`、`accent`、`sourceLabel`（来源或示意说明）。色彩建议用六位十六进制，留出正文与背景的对比度。来源说明可见，但文件级来源映射仍保留在分镜记录里。不要在这里复制完整旁白。
 
-按参考片基线（见 [editorial-explainer.md](editorial-explainer.md)），**凡使用真实截图的场景必须给出可见来源**：用 `sourceLabel` 或 `eyebrow` 标注“官方示例 · 2026.10.07”“官网截图”等出处；示意界面明确标“示意”。顶部 `eyebrow` 兼作持久来源栏的章节标签（品牌／日期／出处），让每个画面都能回答“这是谁的说法”。
+**凡使用真实截图的场景必须给出可见来源**：用 `sourceLabel` 或 `eyebrow` 标注“官方示例 · 2026.10.07”“官网截图”等出处；示意界面明确标“示意”。顶部 `eyebrow` 兼作持久来源栏的章节标签（品牌／日期／出处），让每个画面都能回答“这是谁的说法”。
 
 | kind | 内容字段 | 实际画面变化 |
 | --- | --- | --- |
