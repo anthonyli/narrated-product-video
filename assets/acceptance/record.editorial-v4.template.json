@@ -1,0 +1,117 @@
+{
+  "schema_version": 2,
+  "mode": "editorial-motion",
+  "video": {
+    "path": "",
+    "sha256": ""
+  },
+  "duration": 0,
+  "has_narration": true,
+  "has_captions": true,
+  "gates": {
+    "storyboard": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "sample_visual": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "final_visual": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "final_semantic": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "technical": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "audio_transcript": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "captions": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "audio_listening": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "art_direction": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    },
+    "transition_visual": {
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "evidence": []
+    }
+  },
+  "sample": {
+    "artifact": {
+      "path": "",
+      "sha256": ""
+    },
+    "contains_state_change": false,
+    "contains_join": false
+  },
+  "state_chains": [],
+  "static_scan": {
+    "path": "",
+    "sha256": ""
+  },
+  "hold_reviews": [],
+  "findings": [],
+  "profile": "editorial-v4",
+  "visual_plan": {
+    "path": "REPLACE_WITH_REAL_EVIDENCE",
+    "sha256": "REPLACE_AFTER_RENDER"
+  },
+  "transition_reviews": [
+    {
+      "from": "scene-1",
+      "to": "scene-2",
+      "effect": "radial",
+      "start": 0,
+      "end": 0.45,
+      "status": "not_checked",
+      "reviewer": "",
+      "notes": "",
+      "before": {
+        "path": "REPLACE_WITH_REAL_EVIDENCE",
+        "sha256": "REPLACE_AFTER_RENDER"
+      },
+      "middle": {
+        "path": "REPLACE_WITH_REAL_EVIDENCE",
+        "sha256": "REPLACE_AFTER_RENDER"
+      },
+      "after": {
+        "path": "REPLACE_WITH_REAL_EVIDENCE",
+        "sha256": "REPLACE_AFTER_RENDER"
+      }
+    }
+  ]
+}

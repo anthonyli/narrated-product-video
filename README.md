@@ -9,7 +9,7 @@
 ## 已有能力
 
 - 保留原声：根据 EDL 同步剪辑画面与声音，输出剪辑映射。
-- 生成配音：优先本地 Qwen3-TTS + MLX，提供安装与合成说明；另保留可选百炼适配脚本、连续音轨处理和字幕对齐。
+- 生成配音：优先当前电脑上的 Qwen3-TTS；Apple Silicon 使用 MLX，Linux 云电脑可用 PyTorch CPU，提供安装与合成说明；另保留可选百炼适配脚本、连续音轨处理和字幕对齐。
 - 动态信息层：提供 Remotion 标题、关键词、卡片及字幕模板，保留原录屏制作路线。
 - 共享元素连续动画：[制作与节奏规范](references/shared-motion.md)覆盖连续 UI 重排、聚焦、迁移和遮罩，沿用已认可的源码及风格。默认横版 1080p、独立口播稿、不烧录口播字幕；慢节奏通过动作时序与衔接修复，不用全片倍速。
 - 简单截图视频：提供 FFmpeg/Pillow 渲染路径。
@@ -72,3 +72,12 @@ Python 3、FFmpeg、可用的中文字体；截图渲染需要 Pillow，FFmpeg �
 本项目自己的许可证尚未选定。依赖不随项目代码自动变更许可；使用 Remotion 前查看其 [许可说明](https://www.remotion.dev/docs/license/faq)。素材、字体和声音参考也需具备相应使用权限。
 
 当前按技能源码维护，尚未声明稳定发行版；首次运行、完整制作与人工听感验收应分别核实。
+
+
+## 云端 v3 动画验收补强
+
+详见 [CHANGELOG-v3.md](CHANGELOG-v3.md) 和 [验收门禁](references/acceptance.md)。正式共享元素视频需分别完成分镜、连续短样片和最终配音时间轴检查。主画面低变化扫描只标疑点；验收检查器校验证据及成片哈希，不自动证明审美合格。旧渲染、字幕、配音接口保持不变。
+
+## Editorial v4 增量
+
+阅读 `CHANGELOG-v4.md`、`references/editorial-art-direction.md` 与 `assets/editorial-motion/README.md`。新增可执行六布局及 ripple/radial/flip，不替换旧配音/渲染入口。按 `record.editorial-v4.template.json` 记录真实验收；运行check_acceptance时加 `--require-profile editorial-v4`。脚本合格不等于美学合格，未看的证据不可填通过。

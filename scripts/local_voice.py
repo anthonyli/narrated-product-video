@@ -25,6 +25,7 @@ class VoicePlan:
     language: str = "Chinese"
     max_tokens: int = 4096
     log: Path | None = None
+    engine: str = "mlx"
 
 
 def local_path(value, base, label):
@@ -116,13 +117,38 @@ def prepare_plan(config_path, text_path, output_path, *, language="Chinese", max
     log = Path(log_path).absolute() if log_path else None
     if log and (log.resolve() == output.resolve() or log.exists() or log.is_symlink()):
         raise FileExistsError("Log must use a new path distinct from the output")
-    return VoicePlan(model, reference, text, reference_text, output, language, max_tokens, log)
+    engine = config.get("engine", "mlx")
+    if engine not in {"mlx", "qwen-pytorch-cpu"}:
+        raise ValueError("engine must be mlx or qwen-pytorch-cpu")
+    return VoicePlan(model, reference, text, reference_text, output, language, max_tokens, log, engine)
 
 
 def load_backend():
     # Imported only after offline mode is set; --check-only never imports MLX.
     from mlx_audio.tts.generate import generate_audio
     from mlx_audio.tts.utils import load_model
+    return load_model, generate_audio
+
+
+def load_cpu_backend():
+    """Official Qwen PyTorch model, offline CPU only; no network/service fallback."""
+    if os.environ.get("ORT_DISABLE_TELEMETRY") != "1":
+        raise RuntimeError("Use run_cpu_voice.sh: ORT_DISABLE_TELEMETRY=1 must be set before starting Python")
+    import torch
+    import soundfile as sf
+    import onnxruntime
+    onnxruntime.disable_telemetry_events()
+    from qwen_tts import Qwen3TTSModel
+    torch.set_num_threads(4)
+    def load_model(path):
+        return Qwen3TTSModel.from_pretrained(path, device_map="cpu", dtype=torch.float32,
+                                           attn_implementation="eager", local_files_only=True)
+    def generate_audio(**kwargs):
+        wavs, rate = kwargs["model"].generate_voice_clone(
+            text=kwargs["text"], language=kwargs["lang_code"],
+            ref_audio=kwargs["ref_audio"], ref_text=kwargs["ref_text"],
+            max_new_tokens=kwargs["max_tokens"])
+        sf.write(kwargs["file_prefix"] + ".wav", wavs[0], rate, subtype="PCM_16")
     return load_model, generate_audio
 
 
@@ -144,7 +170,7 @@ def synthesize(plan):
         try:
             with redirect_stdout(diagnostics), redirect_stderr(diagnostics):
                 try:
-                    load_model, generate_audio = load_backend()
+                    load_model, generate_audio = load_cpu_backend() if plan.engine == "qwen-pytorch-cpu" else load_backend()
                     model = load_model(str(plan.model))
                     generate_audio(model=model, text=plan.text,
                                    ref_audio=str(plan.reference_audio), ref_text=plan.reference_text,
@@ -156,7 +182,7 @@ def synthesize(plan):
                     traceback.print_exc()
                     raise
         except Exception as error:
-            raise RuntimeError(f"Local MLX execution failed ({type(error).__name__}); check the local environment"
+            raise RuntimeError(f"Local voice execution failed ({type(error).__name__}); check the local environment"
                                + (" and the private log" if plan.log else "")) from None
         # generate_audio in mlx-audio 0.5.7 can catch errors internally and return.
         if not generated.is_file():
@@ -166,7 +192,7 @@ def synthesize(plan):
         # The temporary file shares the output filesystem. link is exclusive,
         # unlike replace/rename, so a concurrent writer's output is preserved.
         os.link(generated, plan.output)
-    return {"output": str(plan.output), **info, "backend": "local", "offline": True,
+    return {"output": str(plan.output), **info, "backend": "local", "engine": plan.engine, "offline": True,
             "quality_assessed": False, "review_required": "Listen for identity, missing words, repetition and a complete ending"}
 
 

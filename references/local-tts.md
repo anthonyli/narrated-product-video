@@ -96,3 +96,148 @@ python "$SKILL_DIR/scripts/local_voice.py" \
 随后按主技能用 `audio_timing.py` 处理响度、速度与必要静音，并用新的时间映射运行 `align_captions.py`。脚本位于技能目录的 `scripts/`；从独立制作项目调用时使用实际技能目录路径，不假设制作项目自带这些脚本。对原稿与识别的差异先核实声音，再纠正识别错误或重合成受影响段落。
 
 仅完成本地配音不等于整个视频流程离线。云端识别、素材获取等各有网络需求；没有当前任务的云端授权，不执行百炼的声音注册、合成或时间戳请求。首次安装和新平台的完整运行仍需实际验证。
+
+## Linux cloud computer: offline CPU backend
+
+A cloud computer does not require the user's Mac. For Linux x86_64, set
+`"backend": "local", "engine": "qwen-pytorch-cpu"` in the **production project's**
+private voice configuration. Here `local` means inference on the current computer,
+not a third-party voice API. The default engine remains `mlx` for existing Macs.
+
+Use an isolated Python 3.12 environment and the official `qwen-tts` package. Install
+matching PyTorch/torchaudio **CPU** wheels (tested runtime: 2.9.1+cpu), not an MLX
+quantized model. Download the authorized official
+`Qwen/Qwen3-TTS-12Hz-0.6B-Base` model, including its `speech_tokenizer/` files.
+The model's published license is Apache-2.0; do not confuse model licensing with
+permission to clone a person's voice. Downloads/installations require authorization.
+
+`local_voice.py` never downloads weights or calls a synthesis service. The CPU
+engine uses float32/eager attention and four CPU threads. A 2026-10-30 cloud smoke
+test generated 2.96 seconds in 37.07 seconds after a 2.80-second load, with peak RSS
+5.76 GiB. This is one observation, not an SLA or a full-video performance claim.
+Do not run ASR and TTS concurrently on a small-memory worker. A local Whisper pass
+can provide transcript/timestamps, but machine transcripts still require review.
+
+Keep reference voice, transcript and private logs outside the skill repository;
+never commit them. Existing consent validation, offline mode, exclusive new-file
+outputs and no-fallback behavior also apply to the CPU engine. After synthesis,
+verify PCM decoding and duration, ASR-check omissions/repetition/ending, then
+listen for identity and prosody before declaring voice quality accepted.
+
+### Rebuild the tested CPU runtime (authorized installation only)
+
+Create a clean venv; do not mix the Mac MLX installation into it:
+
+```sh
+python3.12 -m venv .venv-cloud-tts
+.venv-cloud-tts/bin/python -m pip install \
+  torch==2.9.1+cpu torchaudio==2.9.1+cpu \
+  --index-url https://download.pytorch.org/whl/cpu
+.venv-cloud-tts/bin/python -m pip install -r references/cloud-cpu-requirements.txt
+.venv-cloud-tts/bin/python -c 'import torch,torchaudio; print(torch.__version__,torchaudio.__version__); assert torch.__version__ == torchaudio.__version__ == "2.9.1+cpu"'
+```
+
+If dependency resolution replaced either CPU package, stop and reinstall the matching
+CPU pair with `--force-reinstall --no-deps` from the same official CPU index, then
+repeat the assertion. Do not solve a CPU mismatch by downloading a CUDA runtime.
+
+Download the official model at revision
+`5d83992436eae1d760afd27aff78a71d676296fc` (all config/tokenizer assets and
+`speech_tokenizer/`, not only the root weights). The two weight files total
+2,511,637,364 bytes. Use `references/cloud-runtime-manifest.json` for exact source
+and verified local ASR-weight hashes. That file contains no voice identity or
+credentials. Model downloads happen during authorized provisioning only, never
+inside narration. The `--check-only` route verifies configuration without importing
+Torch/MLX. Run ASR after synthesis has exited to release model RAM.
+
+Create the real voice configuration in the production project using relative paths
+from the JSON directory to its existing local model, PCM reference WAV, and accurate
+reference transcript. Record actual consent, not a copied placeholder. Example:
+
+```json
+{
+  "backend": "local",
+  "engine": "qwen-pytorch-cpu",
+  "preferred_voice": {"model": "../../models/qwen3-tts-0.6b"},
+  "reference_audio": "reference.wav",
+  "reference_text_file": "reference.txt",
+  "consent": {"authorized": false, "speaker": "self", "scope": "local_narration"}
+}
+```
+
+The false consent placeholder intentionally fails until consent has really been
+obtained and recorded. Regenerate private assets/configuration on a new worker from
+the user's authorized secure storage; the public source archive does not contain
+voice samples or model weights. Do not claim a disposable workspace guarantees
+persistent daily availability.
+
+### CPU production: bounded paragraph generation
+
+Prefer `scripts/local_voice_segments.py` on CPU, instead of one 4096-token long
+request. A full-script greedy trial ran over 32 minutes without an output and was
+stopped; this is **not** a successful full-length benchmark. The official tokenizer
+uses 12.5 audio frames/second; 4096 frames could permit about 328 seconds of unwanted
+audio. The bounded runner keeps official sampling defaults, loads the model once,
+caches each complete paragraph, limits each to 192–384 tokens, logs paragraph
+start/completion and refuses changed inputs on resume. Token-level progress is not
+promised by the upstream wrapper. It never inserts padding or normalizes timing.
+
+```sh
+.venv-cloud-tts/bin/python scripts/local_voice_segments.py \
+  --config private/voice/voice-preferences.json --text narration.txt \
+  --output-dir work/voice-segments
+# Only after an interrupted prior process has exited (and its stale lock reviewed):
+# same command with --resume; never run two writers in one directory.
+```
+
+Use blank-line-separated complete semantic paragraphs (at most 120 characters
+per paragraph). ASR and listen to the cached pieces; a file merely existing is not
+quality acceptance. Check caps/truncation/repeated words, source punctuation and
+natural pauses. Concatenate using real measured sample durations, not invented
+subtitle timing or silence added to fill scenes. Derive final subtitle/CTA timing
+from local ASR after the TTS process has released RAM.
+
+Privacy hardening: the CPU backend calls the official
+`onnxruntime.disable_telemetry_events()` before importing Qwen. The dependency's
+optional telemetry is not part of voice synthesis and must not be allowed as a
+workaround for network review. A runtime that still emits telemetry during import
+must be stopped/reviewed; do not allowlist telemetry hosts or alter network policy.
+
+**2026-10-30 validation status:** the cloud CPU environment generated a 58.480-second
+seven-paragraph narration in 486.19 seconds, but a later first-paragraph repair
+was blocked by network review because ONNX Runtime attempted a Microsoft telemetry
+connection. Calling its official disable API did not eliminate that attempted
+connection in the tested environment. That earlier API-only startup was **not suitable for unattended narration**.
+The later process-start opt-out below passed one actual inference under normal
+review; do not confuse that success with full traffic auditing or persistent
+unattended availability. Never repeat the rejected API-only startup or claim that
+HF offline flags alone prove zero network egress.
+Existing rendered audio may be processed locally with FFmpeg without retrying TTS.
+
+### Process-start telemetry opt-out (subsequent validation)
+
+The earlier post-import API call was insufficient. Microsoft ORT v1.31.1 documents
+`ORT_DISABLE_TELEMETRY=1` **before process initialization** in
+https://github.com/microsoft/onnxruntime/blob/v1.31.1/docs/Privacy.md .
+Use `scripts/run_cpu_voice.sh`, which exports that setting before starting Python;
+the CPU backend rejects calls without it and retains API disabling as defense in
+depth. This is the vendor's privacy opt-out, not a modification of network policy.
+
+```sh
+PYTHON=.venv-cloud-tts/bin/python scripts/run_cpu_voice.sh --segments \
+  --config private/voice/voice-preferences.json --text narration.txt \
+  --output-dir work/voice-segments
+```
+
+A no-model/no-audio import test on 2026-10-30 passed with exit 0 under normal review,
+ORT 1.31.1, build commit `6af1a93`, Release. The installed warning previously showed
+line 600 versus line 553 in inspected official source, so version equality alone
+is not proof of identical builds. Import success does not establish complete
+network-egress auditing. If review rejects a future attempt, stop; do not change
+proxy settings, allowlist telemetry hosts or silently route to another service.
+
+With that process-start opt-out, one authorized short actual Qwen inference also
+completed under normal execution review (exit 0): 2.64 seconds of 24 kHz PCM audio,
+2.10-second load, 25.38-second synthesis, approximately 5.66 GiB peak RSS. No full
+narration was rerun in this check. Treat this as one successful inference, not a
+claim of complete traffic auditing, perpetual availability or accepted voice quality.

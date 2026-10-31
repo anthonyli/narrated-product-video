@@ -1,0 +1,38 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 60,
+  "scenes": [
+    {
+      "layout": "notebook",
+      "duration": 4,
+      "content": {},
+      "transition": {
+        "kind": "ripple",
+        "duration": 0.65,
+        "origin": [
+          0.3,
+          0.66
+        ]
+      }
+    },
+    {
+      "layout": "index_detail",
+      "duration": 4,
+      "content": {},
+      "transition": {
+        "kind": "radial",
+        "duration": 0.6,
+        "origin": [
+          0.73,
+          0.58
+        ]
+      }
+    },
+    {
+      "layout": "timeline",
+      "duration": 4,
+      "content": {}
+    }
+  ]
+}

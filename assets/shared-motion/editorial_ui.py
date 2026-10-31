@@ -145,7 +145,8 @@ def commands(t):
    rect(d,(232,y-7,232+width,y+72),INK,rad=0)
   col=CREAM if current==i else INK
   x=lerp(-520,263,e);text(d,(x,y),s,52,col,True)
-  text(d,(995,y+33),desc[i],24,col,False,'ra')
+  # Keep description labels out of the match-cut until their row starts entering.
+  if e>0:text(d,(995,y+33),desc[i],24,col,False,'ra')
  # selected command becomes the shared entry point to the following docs
  if t>5.0:
   u=out((t-5.0)/.5);r=lerp(0,1280,u);rect(d,(1280-r,0,1280,720),CREAM,rad=0)

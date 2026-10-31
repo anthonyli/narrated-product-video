@@ -1,0 +1,68 @@
+{
+  "model": {
+    "id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+    "revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+    "license": "Apache-2.0",
+    "weights_bytes": 2511637364,
+    "weights": [
+      {
+        "path": "model.safetensors",
+        "bytes": 1829344272
+      },
+      {
+        "path": "speech_tokenizer/model.safetensors",
+        "bytes": 682293092
+      }
+    ]
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "torch": "2.9.1+cpu",
+    "torchaudio": "2.9.1+cpu",
+    "qwen-tts": "0.1.1",
+    "transformers": "4.57.3",
+    "accelerate": "1.12.0",
+    "openai-whisper": "20250625",
+    "device": "cpu",
+    "dtype": "float32",
+    "attention": "eager",
+    "threads": 4
+  },
+  "whisper_models": [
+    {
+      "name": "base",
+      "bytes": 145262807,
+      "sha256": "ed3a0b6b1c0edf879ad9b11b1af5a0e6ab5db9205f891f668f8b0e6c6326e34e",
+      "source": "https://openaipublic.azureedge.net/main/whisper/models/ed3a0b6b1c0edf879ad9b11b1af5a0e6ab5db9205f891f668f8b0e6c6326e34e/base.pt"
+    },
+    {
+      "name": "small",
+      "bytes": 483617219,
+      "sha256": "9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794",
+      "source": "https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt"
+    }
+  ],
+  "visual_runtime": {
+    "Pillow": "13.0.0",
+    "FFmpeg": "7.1.5",
+    "fonts": "Noto Sans CJK",
+    "system_dependencies_not_installed_by_pip": true
+  },
+  "validation_status": {
+    "tts_generated_seconds": 58.480041666666665,
+    "tts_segment_wall_seconds": 486.1864478588104,
+    "unattended_offline_ready": false,
+    "subsequent_process_start_optout_test": {
+      "ORT_DISABLE_TELEMETRY": "1",
+      "import_test_exit": 0,
+      "tts_short_test_exit": 0,
+      "duration_seconds": 2.64,
+      "generation_seconds": 25.379728078842163,
+      "load_seconds": 2.0973265171051025,
+      "fully_audited_network": false,
+      "guard": "run_cpu_voice.sh sets opt-out before Python; backend rejects missing variable"
+    },
+    "historical_blocker": "Later Qwen repair blocked by network review: ONNX Runtime attempted Microsoft telemetry even after official disable_telemetry_events call. Do not retry/bypass review.",
+    "current_status": "Process-start official ORT_DISABLE_TELEMETRY=1 import and one actual Qwen short inference passed normal execution review. Long-term unattended persistence and complete network-egress audit remain unverified."
+  }
+}

@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 import wave
 
 
@@ -55,6 +55,39 @@ class LocalVoiceTests(unittest.TestCase):
 
     def plan(self, **kwargs):
         return voice.prepare_plan(self.config_path, self.text, self.output, **kwargs)
+
+    def test_cpu_backend_rejects_missing_process_optout(self):
+        with patch.dict(os.environ, {}, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "before starting Python"):
+                voice.load_cpu_backend()
+
+    def test_cpu_backend_disables_onnx_telemetry_before_model_load(self):
+        ort = MagicMock()
+        torch = MagicMock()
+        qwen = MagicMock()
+        with patch.dict(os.environ, {"ORT_DISABLE_TELEMETRY": "1"}), patch.dict(sys.modules, {"onnxruntime": ort, "torch": torch,
+                                      "soundfile": MagicMock(), "qwen_tts": qwen}):
+            load, generate = voice.load_cpu_backend()
+            ort.disable_telemetry_events.assert_called_once_with()
+            qwen.Qwen3TTSModel.from_pretrained.assert_not_called()
+            load("/existing/local/model")
+            self.assertTrue(qwen.Qwen3TTSModel.from_pretrained.call_args.kwargs["local_files_only"])
+
+    def test_explicit_cpu_engine_and_unknown_engine_rejected(self):
+        self.config["engine"] = "qwen-pytorch-cpu"
+        self.save_config()
+        self.assertEqual(self.plan().engine, "qwen-pytorch-cpu")
+        self.config["engine"] = "remote-api"
+        self.save_config()
+        with self.assertRaisesRegex(ValueError, "engine must"):
+            self.plan()
+
+    def test_cpu_check_only_does_not_import_cpu_backend(self):
+        self.config["engine"] = "qwen-pytorch-cpu"
+        self.save_config()
+        with patch.object(voice, "load_cpu_backend", side_effect=AssertionError("must not import")), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(voice.main(["--config", str(self.config_path), "--text", str(self.text), "--output", str(self.output), "--check-only"]), 0)
+        self.assertFalse(self.output.parent.exists())
 
     def test_resolves_config_paths_independently_of_working_directory(self):
         plan = self.plan()

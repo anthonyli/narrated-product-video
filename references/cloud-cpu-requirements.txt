@@ -1,0 +1,11 @@
+# Install in an isolated Python 3.12 venv only, after explicit permission.
+# First install matching torch==2.9.1+cpu torchaudio==2.9.1+cpu from
+# https://download.pytorch.org/whl/cpu with --force-reinstall --no-deps.
+# Keep CPU wheel versions aligned; qwen installation can otherwise select CUDA.
+qwen-tts==0.1.1
+transformers==4.57.3
+accelerate==1.12.0
+openai-whisper==20250625
+
+# Visual renderer; system FFmpeg and Noto Sans CJK are separate prerequisites.
+Pillow==13.0.0

@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "design_thesis": "写下服务当前论点的视觉设计主张",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "visual_form": "editorial_hero",
+      "argument": "写观众要理解的一个结论",
+      "dominant_subject": "具体物件或信息主体",
+      "composition_reason": "为何这样安排主次",
+      "material_treatment": "字体、纸张或界面等材质理由",
+      "state_change": "输入状态→动作→结果，不要求持续运动",
+      "implementation": "actual_module.actual_function(config)",
+      "keyframe": {
+        "path": "REPLACE_WITH_REAL_EVIDENCE",
+        "sha256": "REPLACE_AFTER_RENDER"
+      },
+      "review": {
+        "reviewer": "",
+        "notes": "",
+        "hierarchy": "not_checked",
+        "composition": "not_checked",
+        "material_consistency": "not_checked",
+        "legibility": "not_checked",
+        "content_fit": "not_checked"
+      }
+    },
+    {
+      "id": "scene-2",
+      "visual_form": "notebook",
+      "argument": "写观众要理解的一个结论",
+      "dominant_subject": "具体物件或信息主体",
+      "composition_reason": "为何这样安排主次",
+      "material_treatment": "字体、纸张或界面等材质理由",
+      "state_change": "输入状态→动作→结果，不要求持续运动",
+      "implementation": "actual_module.actual_function(config)",
+      "keyframe": {
+        "path": "REPLACE_WITH_REAL_EVIDENCE",
+        "sha256": "REPLACE_AFTER_RENDER"
+      },
+      "review": {
+        "reviewer": "",
+        "notes": "",
+        "hierarchy": "not_checked",
+        "composition": "not_checked",
+        "material_consistency": "not_checked",
+        "legibility": "not_checked",
+        "content_fit": "not_checked"
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "from": "scene-1",
+      "to": "scene-2",
+      "effect": "radial",
+      "duration": 0.45,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "origin_subject": "具体被选中物件",
+      "trigger": "内容中的触发时刻",
+      "reason": "为何展开这个对象",
+      "implementation": "transitions.transition(kind=radial)"
+    }
+  ],
+  "assets": []
+}

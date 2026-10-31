@@ -50,6 +50,15 @@ class EditorialSafeTests(unittest.TestCase):
             area = scene.frame(time).crop((450, 916, 1470, 1004))
             self.assertIsNone(ImageChops.difference(area, Image.new('RGB', area.size, color)).getbbox(), scene.id)
 
+    def test_command_labels_wait_for_row_entrance(self):
+        scenes = adapter.create_scenes(config(), ROOT)
+        # Region occupied by the first row description, clear of moving title.
+        area = (1275, 382, 1500, 447)
+        initial = scenes[1].frame(0).crop(area)
+        self.assertIsNone(ImageChops.difference(initial, Image.new('RGB', initial.size, adapter.ORANGE)).getbbox())
+        entered = scenes[1].frame(0.8).crop(area)
+        self.assertIsNotNone(ImageChops.difference(entered, Image.new('RGB', entered.size, adapter.ORANGE)).getbbox())
+
     def test_engagement_duration_follows_authored_audio_segment(self):
         scenes = adapter.create_scenes(config(), ROOT)
         self.assertEqual(scenes[-1].duration, 4.5)
